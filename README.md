@@ -53,7 +53,8 @@ System requirements** (e.g., PHP 8.2.23, Laravel 10, Composer 2.7.9).
 ## How to Check
 Generate Payment Dates for the Current Year:
 Use the command:
-```bash generate:payment-dates 
+```bash 
+    php generate:payment-dates 
 ```
 This command will generate payment dates for the remainder of this year.
 
