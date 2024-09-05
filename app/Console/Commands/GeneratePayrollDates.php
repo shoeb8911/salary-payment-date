@@ -9,8 +9,8 @@ use SplTempFileObject;
 
 class GeneratePayrollDates extends Command
 {
-    protected $signature = 'generate:payment-dates {year?}';
-    protected $description = 'Generate salary and bonus payment dates for the remainder of the year';
+    protected $signature = 'generate:payment-dates';
+    protected $description = 'Generate salary and bonus payment dates for the remainder of this year';
 
     public function __construct()
     {
@@ -19,20 +19,25 @@ class GeneratePayrollDates extends Command
 
     public function handle()
     {
-        $year = $this->argument('year') ?? Carbon::now()->year;
-        //$year = Carbon::now()->year;
-        $months = range(1, 12);
+        $year = Carbon::now()->year;
+        $months = range(Carbon::now()->month, 12);
         $data = [];
-
         foreach ($months as $month) {
             $baseSalaryDate = $this->getBaseSalaryDate($year, $month);
             $bonusDate = $this->getBonusDate($year, $month);
             $data[] = [$this->getMonthName($month), $baseSalaryDate, $bonusDate];
         }
-
-        $filePath = storage_path('app/payment_dates_'.$year.'.csv');
+        
+        $filePath = storage_path('app/payment_dates.csv');
         $this->generateCsv($data, $filePath);
         $this->info('Payment dates CSV generated successfully at ' . $filePath);
+        // Print the results to the terminal
+         $this->info("  Month | Salary Payment Date | Bonus Payment Date");
+         $this->info(str_repeat('-', 50));
+
+        foreach ($data as $result) {
+            $this->info("{$result[0]} | {$result[1]} | {$result[2]}");
+        }
     }
 
     private function getBaseSalaryDate($year, $month)

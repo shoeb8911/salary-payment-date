@@ -15,10 +15,10 @@ class PaymentDatesTest extends TestCase
         $year = 2025;
         
         // Run the command
-        Artisan::call('generate:payment-dates', ['year' => $year]);
+        Artisan::call('generate:payment-dates');
 
         // Get the expected file path
-        $filePath = "payment_dates_{$year}.csv";
+        $filePath = "payment_dates.csv";
 
         // Assert the file exists in the storage
         Storage::disk('local')->assertExists($filePath);
@@ -27,8 +27,7 @@ class PaymentDatesTest extends TestCase
         $content = Storage::disk('local')->get($filePath);
         
         // Perform assertions on the CSV content
-        $this->assertStringContainsString('January', $content);
-        $this->assertStringContainsString('February', $content);
+        $this->assertStringContainsString('September', $content);
         // Add more assertions as needed
 
         // Clean up
