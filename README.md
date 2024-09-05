@@ -13,9 +13,9 @@ This project is containerized using Docker for consistent and isolated developme
 ## Running the Utility
 1. Ensure Docker is running.
 2. Build and start the Docker containers:
-```bash
+    ```bash
     docker-compose up --build
-    ```
+   ```
 
 # Alternative Without Docker
 
