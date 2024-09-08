@@ -1,37 +1,24 @@
-FROM php:8.2-fpm
+# Use the official PHP 8.2 image with CLI support
+FROM php:8.2-cli
+
+# Set working directory in the container
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    vim \
-    unzip \
     git \
-    curl \
+    unzip \
     libzip-dev \
-    libonig-dev \
-    libxml2-dev \
-    libicu-dev \
-    && docker-php-source extract
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
+    && docker-php-ext-install zip
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www
+# Copy existing application files to the container
+COPY . /app
 
-# Copy existing application directory contents
-COPY . /var/www
+# Install Laravel dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Set up application command to run
+CMD ["php", "artisan", "generate:payment-dates"]

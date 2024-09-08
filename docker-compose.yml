@@ -5,47 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: payment-date-app
-    container_name: payment-date-app
-    restart: unless-stopped
-    working_dir: /var/www
+    container_name: salary_dates_app
     volumes:
-      - ./:/var/www
-    ports:
-      - "9000:9000"
-    networks:
-      - payment-date
-
-  web:
-    image: nginx:alpine
-    container_name: payment-date-web
-    restart: unless-stopped
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www
-      - ./nginx:/etc/nginx/conf.d/
-    networks:
-      - payment-date
-  
-  db:
-    image: mysql:5.7
-    container_name: payment-date-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "3306:3306"
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - payment-date
-
-networks:
-  payment-date:
-
-volumes:
-  dbdata:
+      - .:/app
+    command: php artisan generate:payment-dates
